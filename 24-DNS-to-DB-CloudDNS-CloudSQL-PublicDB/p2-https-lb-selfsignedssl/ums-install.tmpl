@@ -1,0 +1,62 @@
+#! /bin/bash
+## SCRIPT-1: Deploy UserMgmt Application ###############
+# Step-1: Update package list
+sudo apt update
+
+# Step-2: Install telnet (For Troubelshooting)
+sudo apt install -y telnet
+
+# Step-3: Install MySQL Client (For Troubelshooting)
+sudo apt install -y default-mysql-client
+
+# Step-4: Create directory for the application
+mkdir -p /apps/usermgmt && cd /apps/usermgmt
+
+# Step-5: Download Open JDK 11 and Install
+wget https://aka.ms/download-jdk/microsoft-jdk-11.0.23-linux-x64.tar.gz -P /apps/usermgmt
+sudo tar -xzf microsoft-jdk-11.0.23-linux-x64.tar.gz
+sudo mv jdk-11.0.23+9 jdk11
+sudo update-alternatives --install /usr/bin/java java /apps/usermgmt/jdk11/bin/java 1
+sudo update-alternatives --install /usr/bin/javac javac /apps/usermgmt/jdk11/bin/javac 1
+
+# Step-6: Download the application WAR file
+wget https://github.com/stacksimplify/temp1/releases/download/1.0.0/usermgmt-webapp.war -P /apps/usermgmt 
+
+# Step-7: Set environment variables for the database
+export DB_HOSTNAME=${cloudsql_db_endpoint}
+export DB_PORT=3306
+export DB_NAME=webappdb
+export DB_USERNAME=umsadmin
+export DB_PASSWORD=dbpassword11
+
+# Step-8: Run the application (Directly or use below steps to set it as a service)
+java -jar /apps/usermgmt/usermgmt-webapp.war > /apps/usermgmt/ums-start.log &
+
+# Step: Wait to ensure the webserver setup has completed
+sleep 20
+
+## SCRIPT-2: OPS Agent steps ###############
+# Step-1: Install Ops Agent
+curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
+sudo bash add-google-cloud-ops-agent-repo.sh --also-install
+
+# Step-2: Backup existing config.yaml file
+sudo cp /etc/google-cloud-ops-agent/config.yaml /etc/google-cloud-ops-agent/config.yaml.bak
+
+# Step-3: Write the Ops Agent configuration for Nginx logs
+sudo tee /etc/google-cloud-ops-agent/config.yaml > /dev/null << EOF
+logging:
+  receivers:
+    ums_log:
+      type: files
+      include_paths:
+        - /apps/usermgmt/ums-start.log
+  service:
+    pipelines:
+      default_pipeline:
+        receivers: [ums_log]
+EOF
+
+# Step-4: Restart the Ops Agent to apply the new configuration
+sudo service google-cloud-ops-agent restart
+
