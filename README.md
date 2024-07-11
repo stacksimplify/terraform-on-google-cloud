@@ -1,6 +1,6 @@
 # [GCP Terraform on Google Cloud:DevOps SRE 30 Real-World Demos](https://links.stacksimplify.com/gcp-terraform-on-google-cloud-devops-sre-iac)
 
-[![Image](gcp-ace-2.png "GCP Terraform on Google Cloud:DevOps SRE 30 Real-World Demos")](https://links.stacksimplify.com/gcp-terraform-on-google-cloud-devops-sre-iac)
+[![Image](gcp-terraform-1.png "GCP Terraform on Google Cloud:DevOps SRE 30 Real-World Demos")](https://links.stacksimplify.com/gcp-terraform-on-google-cloud-devops-sre-iac)
 
 ## [Course Details](https://links.stacksimplify.com/gcp-terraform-on-google-cloud-devops-sre-iac)
 - **Title:** [GCP Terraform on Google Cloud:DevOps SRE 30 Real-World Demos](https://links.stacksimplify.com/gcp-terraform-on-google-cloud-devops-sre-iac)
