@@ -1,4 +1,5 @@
 ---
+## git demo
 title: GCP Google Cloud Platform - Install CLI Tools
 description: Learn to install cli tools required for using Terraform on GCP
 ---
@@ -141,6 +142,7 @@ gcloud version
 ```t
 # Initialize gcloud CLI
 gcloud init
+
 
 # List accounts whose credentials are stored on the local system:
 gcloud auth list
